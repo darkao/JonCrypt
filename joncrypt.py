@@ -4,7 +4,7 @@
 
 TR
 
-  Bu modül, herhangi bir dosyayı şifrelemek içindir. Fernet AES-128 algoritmasını kuulanmaktadır. Kullanımından dolayı doğacabilecek olan zarardan geliştirici sorumlu tutlamaz. Eğitim amaçlıdır.
+  Bu modül, herhangi bir dosyayı şifrelemek içindir. Fernet AES-128 algoritmasını kullanmaktadır. Kullanımından dolayı doğacabilecek olan zarardan geliştirici sorumlu tutulamaz. Eğitim amaçlıdır.
 
   Kullanım:
     - python joncrpyt.py -e 'şifrelemek için' ya da -d 'deşifrelemek için' -f [dosya_yolu] -k [anahtar]
