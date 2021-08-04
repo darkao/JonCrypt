@@ -1,4 +1,5 @@
-# JonCrypt
+# [JonCrypt](https://darkao.github.io/JonCrypt/)
+
 Simple tool for encrypt and decrypt file with Python3. In BETA!!
 
 
