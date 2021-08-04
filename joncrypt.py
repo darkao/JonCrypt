@@ -38,6 +38,7 @@ def encrypt(filename, key):
         # write the encrypted file
         with open(filename, "wb") as file:
             file.write(encrypted_data)
+            os.rename(filename, filename+ ".jcrypt")
             print("its done! "+ filename + " was successfuly encrypted.")
     except:
         print("Error!")
@@ -52,6 +53,7 @@ def decrypt(filename, key):
         decrypted_data = f.decrypt(encrypted_data)
         with open(filename, "wb") as file:
             file.write(decrypted_data)
+            os.rename(filename, os.path.splitext(filename)[0])
             print("its done! "+ filename + " was successfuly decrypted.")
     except:
         print ("Error!")
