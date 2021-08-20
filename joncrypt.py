@@ -1,33 +1,34 @@
 """
   Author: darkao
   Date: 05.08.2021
+  v2 Update: 20.08.2021
 
 TR
 
-  Bu modül, herhangi bir dosyayı şifrelemek içindir. Fernet AES-128 algoritmasını kullanmaktadır. Kullanımından dolayı doğacabilecek olan zarardan geliştirici sorumlu tutulamaz. Eğitim amaçlıdır.
+  Bu modül, herhangi bir dosyayı/dosyaları şifrelemek içindir. Fernet AES-128 algoritmasını kullanmaktadır. Kullanımından dolayı doğacabilecek olan zarardan geliştirici sorumlu tutlamaz. Eğitim amaçlıdır.
 
   Kullanım:
-    - python joncrpyt.py -e 'şifrelemek için' ya da -d 'deşifrelemek için' -f [dosya_yolu] -k [anahtar]
+    - python joncrpyt.py -e 'şifrelemek için' ya da -d 'deşifrelemek için' [dosya_yolu] -p [şifre]
 
-    *** Şifreliyici anahtarı lütfen not alınız aksi takdirde dosyanıza bir daha erişemeyebilirsiniz.
+    *** Şifreliyici anahtarı lütfen not alınız aksi takdirde dosyalarınıza bir daha erişemeyebilirsiniz.
 """
 
 """
 ENG
 
-   This module is for encrypting any file. It uses the fernet AES-128 algorithm. The developer cannot be held responsible for any damage that may arise from its use. Education purpose only.
+   This module is for encrypting any file/files. It uses the fernet AES-128 algorithm. The developer cannot be held responsible for any damage that may arise from its use. Education purpose only.
 
    Usage:
-     - python joncrpyt.py -e 'for encryption' or -d 'for decryption' -f [file_destination] -k [key]
+     - python joncrpyt.py -e 'for encryption' or -d 'for decryption' [file_destination] -p [password]
 
-     *** Please make a note of the encryption key, otherwise you may not be able to access your file again.
+     *** Please take a note of the encryption password, otherwise you may not be able to access your files again.
 """
 
 from cryptography.fernet import Fernet
 import base64, hashlib, os, argparse
 
-
 def encrypt(filename, key):
+    extension = ".jcrypt"
     try:
         f = Fernet(key)
         with open(filename, "rb") as file:
@@ -38,10 +39,11 @@ def encrypt(filename, key):
         # write the encrypted file
         with open(filename, "wb") as file:
             file.write(encrypted_data)
-            os.rename(filename, filename+ ".jcrypt")
+            os.rename(filename, filename+ extension)
             print("its done! "+ filename + " was successfuly encrypted.")
-    except:
-        print("Error!")
+    except Exception as e:
+        print(e)
+        quit()
 
 def decrypt(filename, key):
     try:
@@ -55,8 +57,9 @@ def decrypt(filename, key):
             file.write(decrypted_data)
             os.rename(filename, os.path.splitext(filename)[0])
             print("its done! "+ filename + " was successfuly decrypted.")
-    except:
-        print ("Error!")
+    except Exception as e:
+        print(e)
+        quit()
 
 
 
@@ -67,7 +70,7 @@ def banner():
   _  | |/ _ \| '_ \| |   | '__| | | | '_ \| __|
  | |_| | (_) | | | | |___| |  | |_| | |_) | |_ 
   \___/ \___/|_| |_|\____|_|   \__, | .__/ \__|
-                               |___/|_|        
+                               |___/|_|        v2
 
 
                                Author: https://github.com/darkao/
@@ -78,33 +81,42 @@ def main():
   banner()
   parser = argparse.ArgumentParser()
 
-  parser.add_argument("--encrypt","-e", nargs='?',const='arg_was_not_given', help="For encryption")
-  parser.add_argument("--decrypt","-d", nargs='?',const='arg_was_not_given',help="For decryption")
-  parser.add_argument("--file", "-f", help="Select a file.")
-  parser.add_argument("--key","-k", help="Encrytion key.")
+  parser.add_argument("--encrypt","-e", help="For encryption file or folder")
+  parser.add_argument("--decrypt","-d", help="For decryption file or folder")
+  parser.add_argument("--password","-p", help="Encrytion key.")
 
   data = parser.parse_args()
 
-  if(data.file):
-
-    if not os.path.isfile(data.file):
-      print("No such file was found.")
+  if(data.encrypt and data.password):
+    m_key = data.password.encode()
+    key = hashlib.md5(m_key).hexdigest()
+    key_64 = base64.urlsafe_b64encode(key.encode("utf-8"))
+    if os.path.isdir(data.encrypt):
+      directory = os.listdir(data.encrypt)
+      os.chdir(data.encrypt)
+      for file in directory:
+          encrypt(file, key_64)
 
     else:
+      encrypt(data.encrypt, key_64)
 
-      if(data.encrypt and data.file and data.key):
-        m_key = data.key.encode()
-        key = hashlib.md5(m_key).hexdigest()
-        key_64 = base64.urlsafe_b64encode(key.encode("utf-8"))
-        encrypt(data.file, key_64)
-        print("Key is: " + data.key)
+    print("Password is: " + data.password)
 
-      elif (data.decrypt and data.file and data.key):
-        m_key = data.key.encode()
-        key = hashlib.md5(m_key).hexdigest()
-        key_64 = base64.urlsafe_b64encode(key.encode("utf-8"))
-        decrypt(data.file, key_64)
-
+  elif (data.decrypt and data.password):
+    m_key = data.password.encode()
+    key = hashlib.md5(m_key).hexdigest()
+    key_64 = base64.urlsafe_b64encode(key.encode("utf-8"))
+    if os.path.isdir(data.decrypt):
+      directory = os.listdir(data.decrypt)
+      os.chdir(data.decrypt)
+      for file in directory:
+        decrypt(file, key_64)
+    else:
+      decrypt(data.decrypt, key_64)
+  else:
+    print("""
+    Usage: joncrypt.py [Option] [file]
+    """)
 
 if __name__ == "__main__":
     main()
