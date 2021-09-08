@@ -10,7 +10,7 @@ Simple tool for encrypt and decrypt file with Python3. In BETA!!
 
 # Türkçe
 
-  Bu modül, herhangi bir dosyayı/dosyaları şifrelemek içindir. Fernet AES-128 algoritmasını kullanmaktadır. Kullanımından dolayı doğacabilecek olan zarardan geliştirici sorumlu tutlamaz. Eğitim amaçlıdır.
+  Bu modül, herhangi bir dosyayı/dosyaları şifrelemek içindir. Fernet AES-128 algoritmasını kullanmaktadır. Kullanımından dolayı doğabilecek olan zarardan geliştirici sorumlu tutulamaz. Eğitim amaçlıdır.
 
   Kullanım:
     - python joncrpyt.py -e 'şifrelemek için' ya da -d 'deşifrelemek için' [dosya_yolu/klasör_yolu] -p [şifre]
